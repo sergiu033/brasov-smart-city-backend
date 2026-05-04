@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: smart-city-app
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/smart_city_app}
+    username: ${DB_USERNAME:smartcity}
+    password: ${DB_PASSWORD:smartcity}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:ZkFrZUJhc2U2NEtleUZvclNtYXJ0Q2l0eUFwcEJhY2tlbmQxMjM0NTY3ODkwMTIzNDU2Nzg=}
+      access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+      refresh-token-expiration-days: ${JWT_REFRESH_EXPIRATION_DAYS:7}

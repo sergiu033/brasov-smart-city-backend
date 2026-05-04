@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/smart_city_app
+    username: smartcity
+    password: smartcity
+  jpa:
+    show-sql: true

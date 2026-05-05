@@ -44,6 +44,7 @@ CREATE TABLE events (
     location VARCHAR(255),
     start_time TIMESTAMP,
     end_time TIMESTAMP,
+    status VARCHAR(32) NOT NULL DEFAULT 'PLANNED',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

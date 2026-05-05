@@ -1,0 +1,18 @@
+package com.smartcity.reports.dto;
+
+import com.smartcity.reports.enums.ReportCategory;
+import com.smartcity.reports.enums.ReportStatus;
+
+import java.time.LocalDateTime;
+
+public record CityReportRequest(
+        Long id,
+        ReportCategory category,
+        String description,
+        Double latitude,
+        Double longitude,
+        String photoUrl,
+        ReportStatus status,
+        LocalDateTime createdAt
+) {
+}

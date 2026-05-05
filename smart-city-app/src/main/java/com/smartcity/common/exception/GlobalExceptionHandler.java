@@ -43,7 +43,10 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({
+            EntityNotFoundException.class,
+            EventNotFoundException.class
+    })
     public ResponseEntity<ApiResponse<Void>> handleNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
     }

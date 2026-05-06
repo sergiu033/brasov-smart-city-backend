@@ -1,8 +1,8 @@
 package com.smartcity.reports.service;
 
-import com.smartcity.common.exception.CityReportNotFoundException;
-import com.smartcity.common.exception.ReportCategoryNotFoundException;
-import com.smartcity.common.exception.UserNotFoundException;
+import com.smartcity.exception.CityReportNotFoundException;
+import com.smartcity.exception.ReportCategoryNotFoundException;
+import com.smartcity.exception.UserNotFoundException;
 import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.entity.CityReport;
@@ -12,10 +12,8 @@ import com.smartcity.reports.repository.CityReportRepository;
 import com.smartcity.reports.repository.ReportCategoryRepository;
 import com.smartcity.user.entity.User;
 import com.smartcity.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

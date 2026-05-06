@@ -1,6 +1,6 @@
 package com.smartcity.reports.service;
 
-import com.smartcity.common.exception.ReportCategoryNotFoundException;
+import com.smartcity.exception.ReportCategoryNotFoundException;
 import com.smartcity.reports.dto.ReportCategoryRequest;
 import com.smartcity.reports.dto.ReportCategoryResponse;
 import com.smartcity.reports.entity.ReportCategory;

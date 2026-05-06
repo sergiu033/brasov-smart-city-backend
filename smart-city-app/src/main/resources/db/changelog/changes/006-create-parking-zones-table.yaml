@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-parking-zones-table
+      author: antigravity
+      changes:
+        - createTable:
+            tableName: parking_zones
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: zone_code
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: tariff_per_hour
+                  type: NUMERIC(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tariff_per_day
+                  type: NUMERIC(10, 2)
+                  constraints:
+                    nullable: false

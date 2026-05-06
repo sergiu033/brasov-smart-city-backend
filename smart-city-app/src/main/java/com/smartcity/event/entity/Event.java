@@ -3,6 +3,7 @@ package com.smartcity.event.entity;
 import com.smartcity.event.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -36,14 +37,17 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Builder.Default
-    private EventStatus status = EventStatus.PLANNED;
+    private EventStatus status;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
     @PrePersist
     private void onCreate() {
+        if (this.status == null) {
+            this.status = EventStatus.PLANNED;
+        }
+
         this.createdAt = LocalDateTime.now();
     }
 }

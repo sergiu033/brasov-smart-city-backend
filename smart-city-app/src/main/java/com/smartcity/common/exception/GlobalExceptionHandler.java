@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
             EntityNotFoundException.class,
             EventNotFoundException.class
     })
-    public ResponseEntity<ApiResponse<Void>> handleNotFound(EntityNotFoundException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
     }
 

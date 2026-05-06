@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 007-create-report-categories-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: report_categories

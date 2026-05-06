@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 002-create-refresh-tokens-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: refresh_tokens

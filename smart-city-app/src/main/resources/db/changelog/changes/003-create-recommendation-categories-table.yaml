@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 003-create-recommendation-categories-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: recommendation_categories

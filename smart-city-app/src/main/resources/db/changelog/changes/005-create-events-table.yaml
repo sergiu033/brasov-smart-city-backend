@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 005-create-events-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: events

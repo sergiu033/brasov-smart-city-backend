@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 009-create-municipal-services-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: municipal_services

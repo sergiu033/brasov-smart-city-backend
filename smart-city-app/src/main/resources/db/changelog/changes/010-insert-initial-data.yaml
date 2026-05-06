@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 010-insert-initial-data
-      author: antigravity
+      author: sergiu
       changes:
         - insert:
             tableName: recommendation_categories

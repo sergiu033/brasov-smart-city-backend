@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 006-create-parking-zones-table
-      author: antigravity
+      author: sergiu
       changes:
         - createTable:
             tableName: parking_zones

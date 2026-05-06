@@ -28,3 +28,9 @@ databaseChangeLog:
                   type: NUMERIC(10, 2)
                   constraints:
                     nullable: false
+              - column:
+                  name: status
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+                  defaultValue: ACTIVE

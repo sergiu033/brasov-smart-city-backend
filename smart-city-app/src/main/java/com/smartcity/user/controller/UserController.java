@@ -1,6 +1,5 @@
 package com.smartcity.user.controller;
 
-import com.smartcity.common.api.ApiResponse;
 import com.smartcity.user.dto.UserProfileResponse;
 import com.smartcity.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserProfileResponse>> me(Authentication authentication) {
-        return ResponseEntity.ok(ApiResponse.success(
-                userService.getCurrentUserProfile(authentication.getName()),
-                "Profil incarcat."));
+    public ResponseEntity<UserProfileResponse> me(Authentication authentication) {
+        return ResponseEntity.ok(userService.getCurrentUserProfile(authentication.getName()));
     }
 }

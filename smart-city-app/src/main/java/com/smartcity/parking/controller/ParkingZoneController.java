@@ -1,6 +1,5 @@
 package com.smartcity.parking.controller;
 
-import com.smartcity.common.api.ApiResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,44 +25,30 @@ public class ParkingZoneController {
     private final ParkingZoneService parkingZoneService;
 
     @GetMapping("/zones")
-    public ApiResponse<Page<ParkingZoneResponse>> zones(Pageable pageable) {
-        return ApiResponse.success(
-                parkingZoneService.findAll(pageable),
-                "Zone de parcare."
-        );
+    public ResponseEntity<Page<ParkingZoneResponse>> zones(Pageable pageable) {
+        return ResponseEntity.ok(parkingZoneService.findAll(pageable));
     }
 
     @GetMapping("/zones/{zoneCode}")
-    public ApiResponse<ParkingZoneDetailsResponse> zoneDetails(@PathVariable String zoneCode) {
-        return ApiResponse.success(
-                parkingZoneService.findByZoneCode(zoneCode),
-                "Detalii zona de parcare."
-        );
+    public ResponseEntity<ParkingZoneDetailsResponse> zoneDetails(@PathVariable String zoneCode) {
+        return ResponseEntity.ok(parkingZoneService.findByZoneCode(zoneCode));
     }
 
     @PostMapping("/zones")
-    public ApiResponse<ParkingZoneDetailsResponse> addParkingZone(@Valid @RequestBody ParkingZoneCreateRequest req) {
-        return ApiResponse.success(
-                parkingZoneService.addParkingZone(req),
-                "Zona de parcare a fost adaugata cu succes."
-        );
+    public ResponseEntity<ParkingZoneDetailsResponse> addParkingZone(@Valid @RequestBody ParkingZoneCreateRequest req) {
+        return ResponseEntity.ok(parkingZoneService.addParkingZone(req));
     }
 
     @PutMapping("/zones/{zoneId}")
-    public ApiResponse<ParkingZoneDetailsResponse> updateParkingZone(
+    public ResponseEntity<ParkingZoneDetailsResponse> updateParkingZone(
             @PathVariable Long zoneId,
             @Valid @RequestBody ParkingZoneUpdateRequest req) {
-            return ApiResponse.success(
-                    parkingZoneService.updateParkingZone(zoneId, req),
-                    "Zona de parcare a fost actualizata cu succes."
-            );
+        return ResponseEntity.ok(parkingZoneService.updateParkingZone(zoneId, req));
     }
 
     @DeleteMapping("zones/{zoneId}")
-    public ApiResponse<Void> deleteParkingZone(@PathVariable Long zoneId) {
+    public ResponseEntity<Void> deleteParkingZone(@PathVariable Long zoneId) {
         parkingZoneService.deleteParkingZone(zoneId);
-        return ApiResponse.successMessage(
-                "Zona de parcare a fost stearsa cu succes."
-        );
+        return ResponseEntity.noContent().build();
     }
 }

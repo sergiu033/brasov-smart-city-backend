@@ -1,7 +1,7 @@
 package com.smartcity.parking.service;
 
-import com.smartcity.common.exception.ParkingZoneCodeAlreadyTakenException;
-import com.smartcity.common.exception.ParkingZoneNotFoundException;
+import com.smartcity.exception.ParkingZoneCodeAlreadyTakenException;
+import com.smartcity.exception.ParkingZoneNotFoundException;
 import com.smartcity.parking.dto.request.ParkingZoneCreateRequest;
 import com.smartcity.parking.dto.request.ParkingZoneUpdateRequest;
 import com.smartcity.parking.dto.response.ParkingZoneDetailsResponse;

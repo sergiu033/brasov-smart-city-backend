@@ -1,6 +1,6 @@
 package com.smartcity.event.service;
 
-import com.smartcity.common.exception.EventNotFoundException;
+import com.smartcity.exception.EventNotFoundException;
 import com.smartcity.event.dto.request.EventCreateRequest;
 import com.smartcity.event.dto.request.EventUpdateRequest;
 import com.smartcity.event.dto.response.EventDetailsResponse;

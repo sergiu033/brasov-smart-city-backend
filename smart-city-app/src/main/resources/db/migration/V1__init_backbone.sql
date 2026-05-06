@@ -52,7 +52,8 @@ CREATE TABLE parking_zones (
     id BIGSERIAL PRIMARY KEY,
     zone_code VARCHAR(50) NOT NULL UNIQUE,
     tariff_per_hour NUMERIC(10, 2) NOT NULL,
-    tariff_per_day NUMERIC(10, 2) NOT NULL
+    tariff_per_day NUMERIC(10, 2) NOT NULL,
+    status VARCHAR(32) NOT NULL DEFAULT 'ACTIVE'
 );
 
 CREATE TABLE city_reports (

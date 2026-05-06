@@ -43,9 +43,16 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
+    @ExceptionHandler({ParkingZoneCodeAlreadyTakenException.class})
+    public ResponseEntity<ApiResponse<Void>> handleConflict(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
     @ExceptionHandler({
             EntityNotFoundException.class,
-            EventNotFoundException.class
+            EventNotFoundException.class,
+            ParkingZoneNotFoundException.class
     })
     public ResponseEntity<ApiResponse<Void>> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));

@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
-                                "/api/events/**"
+                                "/api/events/**",
+                                "/api/parking/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/transport/**",

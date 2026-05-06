@@ -1,0 +1,140 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-insert-initial-data
+      author: sergiu
+      changes:
+        - insert:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: code
+                  value: gastronomie
+              - column:
+                  name: display_name
+                  value: Gastronomie
+        - insert:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: code
+                  value: natura
+              - column:
+                  name: display_name
+                  value: Natura
+        - insert:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: code
+                  value: plimbare
+              - column:
+                  name: display_name
+                  value: Plimbare in oras
+        - insert:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: code
+                  value: cultura
+              - column:
+                  name: display_name
+                  value: Cultura
+        - insert:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: code
+                  value: experiente
+              - column:
+                  name: display_name
+                  value: Experiente
+        - insert:
+            tableName: recommendations
+            columns:
+              - column:
+                  name: category_id
+                  valueNumeric: 1
+              - column:
+                  name: title
+                  value: Restaurant local recomandat
+              - column:
+                  name: location
+                  value: Centrul vechi
+              - column:
+                  name: description
+                  value: Punct de pornire pentru modulul de activitati.
+        - insert:
+            tableName: recommendations
+            columns:
+              - column:
+                  name: category_id
+                  valueNumeric: 2
+              - column:
+                  name: title
+                  value: Traseu usor spre Tampa
+              - column:
+                  name: location
+                  value: Tampa
+              - column:
+                  name: description
+                  value: Exemplu de recomandare seeded.
+        - insert:
+            tableName: events
+            columns:
+              - column:
+                  name: title
+                  value: Eveniment pilot
+              - column:
+                  name: description
+                  value: Date initiale pentru modulul de evenimente.
+              - column:
+                  name: location
+                  value: Piata Sfatului
+              - column:
+                  name: start_time
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: end_time
+                  valueComputed: CURRENT_TIMESTAMP + INTERVAL '2 hours'
+        - insert:
+            tableName: parking_zones
+            columns:
+              - column:
+                  name: zone_code
+                  value: A
+              - column:
+                  name: tariff_per_hour
+                  valueNumeric: 5.00
+              - column:
+                  name: tariff_per_day
+                  valueNumeric: 30.00
+        - insert:
+            tableName: parking_zones
+            columns:
+              - column:
+                  name: zone_code
+                  value: B
+              - column:
+                  name: tariff_per_hour
+                  valueNumeric: 3.00
+              - column:
+                  name: tariff_per_day
+                  valueNumeric: 20.00
+        - insert:
+            tableName: municipal_services
+            columns:
+              - column:
+                  name: name
+                  value: Programari ghiseu
+              - column:
+                  name: status
+                  value: planned
+        - insert:
+            tableName: municipal_services
+            columns:
+              - column:
+                  name: name
+                  value: Plata taxe locale
+              - column:
+                  name: status
+                  value: planned

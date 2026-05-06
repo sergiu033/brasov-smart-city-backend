@@ -54,7 +54,9 @@ public class GlobalExceptionHandler {
             EventNotFoundException.class,
             ParkingZoneNotFoundException.class,
             RecommendationNotFoundException.class,
-            RecommendationCategoryNotFoundException.class
+            RecommendationCategoryNotFoundException.class,
+            ReportCategoryNotFoundException.class,
+            UserNotFoundException.class
     })
 
     public ResponseEntity<ErrorDetails> handleNotFound(RuntimeException ex, HttpServletRequest request) {

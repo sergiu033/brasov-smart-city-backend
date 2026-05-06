@@ -1,6 +1,5 @@
 package com.smartcity.reports.dto;
 
-import com.smartcity.reports.enums.ReportCategory;
 import com.smartcity.reports.enums.ReportStatus;
 
 import java.time.LocalDateTime;
@@ -8,7 +7,7 @@ import java.time.LocalDateTime;
 public record CityReportResponse(
         Long id,
         Long userId,
-        ReportCategory category,
+        ReportCategoryResponse category,
         String description,
         Double latitude,
         Double longitude,

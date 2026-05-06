@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-recommendation-categories-table
+      author: antigravity
+      changes:
+        - createTable:
+            tableName: recommendation_categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: code
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: display_name
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false

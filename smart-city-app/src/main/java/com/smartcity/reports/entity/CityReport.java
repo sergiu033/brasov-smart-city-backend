@@ -1,6 +1,5 @@
 package com.smartcity.reports.entity;
 
-import com.smartcity.reports.enums.ReportCategory;
 import com.smartcity.reports.enums.ReportStatus;
 import com.smartcity.user.entity.User;
 import jakarta.persistence.Column;
@@ -40,8 +39,8 @@ public class CityReport {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false, length = 100)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private ReportCategory category;
 
     @Column(columnDefinition = "TEXT")

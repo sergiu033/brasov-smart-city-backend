@@ -7,13 +7,17 @@ import java.util.Map;
 import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.service.CityReportService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,40 +32,51 @@ public class ReportsController {
         this.cityReportService = cityReportService;
     }
 
-    @GetMapping("/categories")
-    public ApiResponse<List<Map<String, String>>> categories() {
-        return ApiResponse.success(List.of(
-                Map.of("code", "graffiti", "label", "Graffiti"),
-                Map.of("code", "iluminat", "label", "Iluminat public"),
-                Map.of("code", "infrastructura", "label", "Infrastructura"),
-                Map.of("code", "curatenie", "label", "Curatenie")),
-                "Categorii disponibile pentru raportare.");
-    }
-
-//    @PostMapping
-//    public ApiResponse<Map<String, Object>> submit(@RequestBody Map<String, Object> request) {
-//        return ApiResponse.success(Map.of(
-//                "status", "received",
-//                "category", request.getOrDefault("category", "general"),
-//                "message", "Sesizarea a fost inregistrata in backbone-ul initial."),
-//                "Raport trimis.");
-//    }
-
-    @GetMapping("/mine")
-    public ApiResponse<List<Map<String, Object>>> mine(Authentication authentication) {
-        return ApiResponse.success(List.of(
-                Map.of("id", 1, "category", "infrastructura", "status", "NEW", "submittedBy", authentication.getName()),
-                Map.of("id", 2, "category", "iluminat", "status", "IN_PROGRESS", "submittedBy", authentication.getName())),
-                "Sesizarile utilizatorului curent.");
-    }
-
     @PostMapping
-    public ApiResponse<CityReportResponse> submit(
+    public ResponseEntity<CityReportResponse> submit(
             @RequestBody CityReportRequest request,
             @AuthenticationPrincipal UserDetails currentUser
     ) {
         String email = currentUser.getUsername();
 
-        return ApiResponse.success(cityReportService.createReport(request, email), "Raport trimis.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityReportService.createReport(request, email));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Page<CityReportResponse>> currentUserReports(
+            @AuthenticationPrincipal UserDetails currentUser,
+            Pageable pageable
+    ) {
+        String email = currentUser.getUsername();
+
+        return ResponseEntity.ok().body(cityReportService.getCurrentUserReports(email, pageable));
+    }
+
+    @GetMapping("/{reportId}")
+    public ResponseEntity<CityReportResponse> getReport(
+            @PathVariable Long reportId
+    ) {
+        return ResponseEntity.ok().body(cityReportService.getReportById(reportId));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CityReportResponse>> getReports(Pageable pageable) {
+        return ResponseEntity.ok().body(cityReportService.getAllReports(pageable));
+    }
+
+    @PutMapping("/{reportId}")
+    public ResponseEntity<CityReportResponse> updateReport(
+            @PathVariable Long reportId,
+            @RequestBody CityReportRequest request
+    ) {
+        return ResponseEntity.ok().body(cityReportService.updateReport(reportId, request));
+    }
+
+    @DeleteMapping("/{reportId}")
+    public ResponseEntity<Void> deleteReport(
+            @PathVariable Long reportId
+    ) {
+        cityReportService.deleteReport(reportId);
+        return ResponseEntity.noContent().build();
     }
 }

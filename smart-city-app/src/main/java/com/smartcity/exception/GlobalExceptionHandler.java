@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
                 .body(error(ex.getMessage(), request));
     }
 
-    @ExceptionHandler({ParkingZoneCodeAlreadyTakenException.class})
+    @ExceptionHandler({ParkingZoneCodeAlreadyTakenException.class, RecommendationCategoryCodeAlreadyTaken.class})
     public ResponseEntity<ErrorDetails> handleConflict(RuntimeException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error(ex.getMessage(), request));
@@ -58,7 +58,6 @@ public class GlobalExceptionHandler {
             ReportCategoryNotFoundException.class,
             UserNotFoundException.class
     })
-
     public ResponseEntity<ErrorDetails> handleNotFound(RuntimeException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(ex.getMessage(), request));
     }

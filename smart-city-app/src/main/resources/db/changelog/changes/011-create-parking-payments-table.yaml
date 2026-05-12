@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011
+      author: ai-assistant
+      changes:
+        - createTable:
+            tableName: parking_payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_parking_payments_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: zone_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_parking_payments_zone
+                    referencedTableName: parking_zones
+                    referencedColumnNames: id
+              - column:
+                  name: plate_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration_hours
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: DECIMAL(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_paid
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latitude
+                  type: DOUBLE
+              - column:
+                  name: longitude
+                  type: DOUBLE
+              - column:
+                  name: payment_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

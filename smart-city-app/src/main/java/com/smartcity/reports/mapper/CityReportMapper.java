@@ -12,6 +12,7 @@ import org.mapstruct.NullValueCheckStrategy;
 public interface CityReportMapper {
 
     @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "user.fullName", target = "userName")
     CityReportResponse toResponse(CityReport cityReport);
 
     CityReport toEntity(CityReportRequest cityReportRequest);

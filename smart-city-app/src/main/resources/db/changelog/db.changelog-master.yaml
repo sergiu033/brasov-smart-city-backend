@@ -19,3 +19,5 @@ databaseChangeLog:
       file: db/changelog/changes/009-create-municipal-services-table.yaml
   - include:
       file: db/changelog/changes/010-insert-initial-data.yaml
+  - include:
+      file: db/changelog/changes/011-create-parking-payments-table.yaml

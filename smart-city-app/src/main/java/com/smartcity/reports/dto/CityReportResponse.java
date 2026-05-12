@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public record CityReportResponse(
         Long id,
         Long userId,
+        String userName,
         ReportCategoryResponse category,
         String description,
         Double latitude,

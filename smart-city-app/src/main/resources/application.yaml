@@ -19,6 +19,8 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  transport:
+    data-path: ${TRANSPORT_DATA_PATH:../Testing Materials/linia_4.json} /// momentan
   security:
     jwt:
       secret: ${JWT_SECRET:ZkFrZUJhc2U2NEtleUZvclNtYXJ0Q2l0eUFwcEJhY2tlbmQxMjM0NTY3ODkwMTIzNDU2Nzg=}

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -18,8 +18,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserProfileResponse> me(Authentication authentication) {
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> profile(Authentication authentication) {
         return ResponseEntity.ok(userService.getCurrentUserProfile(authentication.getName()));
     }
 }

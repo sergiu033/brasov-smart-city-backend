@@ -1,8 +1,5 @@
 package com.smartcity.reports.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.service.CityReportService;

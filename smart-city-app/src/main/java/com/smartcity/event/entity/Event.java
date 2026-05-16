@@ -42,6 +42,9 @@ public class Event {
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
+    @Column(name = "image_url", columnDefinition = "VARCHAR(1024)")
+    private String imageUrl;
+
     @PrePersist
     private void onCreate() {
         if (this.status == null) {

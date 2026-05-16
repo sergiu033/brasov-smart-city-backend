@@ -3,29 +3,13 @@ services:
     image: postgres:16
     container_name: smart-city-postgres
     environment:
-      POSTGRES_DB: smart_city_app
+      POSTGRES_DB: smartcity
       POSTGRES_USER: smartcity
       POSTGRES_PASSWORD: smartcity
     ports:
       - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  app:
-    build: .
-    container_name: smart-city-app
-    ports:
-      - '8080:8080'
-    depends_on:
-      - postgres
-    environment:
-      - DB_URL=jdbc:postgresql://postgres:5432/smart_city_app
-      - DB_USERNAME=smartcity
-      - DB_PASSWORD=smartcity
-      - TRANSPORT_DATA_PATH=/app/data/linia_4.json
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-    volumes:
-      - ../Testing Materials:/app/data
 
 volumes:
   postgres_data:

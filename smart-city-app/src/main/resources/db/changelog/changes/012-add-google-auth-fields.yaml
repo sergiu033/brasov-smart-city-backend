@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 012-add-google-auth-fields
-      author: smartcity
+      author: sergiu
       changes:
         - addColumn:
             tableName: users

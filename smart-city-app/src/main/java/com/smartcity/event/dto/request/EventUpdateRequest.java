@@ -3,6 +3,7 @@ package com.smartcity.event.dto.request;
 import com.smartcity.event.enums.EventStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public record EventUpdateRequest(
         String location,
         LocalDateTime startTime,
         LocalDateTime endTime,
-        EventStatus status
+        EventStatus status,
+        MultipartFile image
 ) {
 }

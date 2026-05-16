@@ -13,6 +13,7 @@ public interface CityReportMapper {
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.fullName", target = "userName")
+    @Mapping(source = "category.name", target = "categoryName")
     CityReportResponse toResponse(CityReport cityReport);
 
     CityReport toEntity(CityReportRequest cityReportRequest);

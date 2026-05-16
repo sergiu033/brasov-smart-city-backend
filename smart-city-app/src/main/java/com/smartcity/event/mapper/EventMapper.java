@@ -5,6 +5,7 @@ import com.smartcity.event.dto.request.EventUpdateRequest;
 import com.smartcity.event.dto.response.EventDetailsResponse;
 import com.smartcity.event.entity.Event;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

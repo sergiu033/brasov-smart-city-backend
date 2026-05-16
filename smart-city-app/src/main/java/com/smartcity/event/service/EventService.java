@@ -8,6 +8,7 @@ import com.smartcity.event.dto.response.EventResponse;
 import com.smartcity.event.entity.Event;
 import com.smartcity.event.mapper.EventMapper;
 import com.smartcity.event.repository.EventRepository;
+import com.smartcity.imageservice.ImageStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final ImageStorageService imageStorageService;
 
     private Event getByIdOrThrow(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(
@@ -67,7 +71,19 @@ public class EventService {
 
     @Transactional
     public EventDetailsResponse addEvent(EventCreateRequest req) {
+
+        String filePath = "";
+
+        try {
+            InputStream image = req.image().getInputStream();
+            filePath = imageStorageService.saveImage(image, req.image().getName());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Event event = eventMapper.eventCreateRequestToEvent(req);
+        event.setImageUrl(filePath);
         Event savedEvent = eventRepository.save(event);
         return eventMapper.eventToEventDetailsResponse(savedEvent);
     }

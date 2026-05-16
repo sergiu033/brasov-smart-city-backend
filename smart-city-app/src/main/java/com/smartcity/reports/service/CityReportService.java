@@ -33,15 +33,20 @@ public class CityReportService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail));
 
+        ReportCategory reportCategory = reportCategoryRepository.findById(cityReportRequest.categoryId())
+                .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + cityReportRequest.categoryId() + " not found"));
+
         CityReport newReport = cityReportMapper.toEntity(cityReportRequest);
 
         newReport.setUser(user);
+        newReport.setCategory(reportCategory);
 
         return cityReportMapper.toResponse(
                 cityReportRepository.save(newReport)
         );
     }
 
+    @Transactional(readOnly = true)
     public CityReportResponse getReportById(Long reportId) {
 
         CityReport cityReport = cityReportRepository.findById(reportId)
@@ -73,6 +78,7 @@ public class CityReportService {
         cityReportRepository.deleteById(reportId);
     }
 
+    @Transactional(readOnly = true)
     public Page<CityReportResponse> getCurrentUserReports(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail));
@@ -80,6 +86,7 @@ public class CityReportService {
         return cityReportRepository.findByUserId(user.getId(), pageable).map(cityReportMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public Page<CityReportResponse> getAllReports(Pageable pageable) {
         return cityReportRepository.findAll(pageable).map(cityReportMapper::toResponse);
     }

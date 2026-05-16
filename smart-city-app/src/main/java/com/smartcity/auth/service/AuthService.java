@@ -69,6 +69,7 @@ public class AuthService {
         if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Parolele introduse nu coincid.");
         }
+        validatePasswordStrength(request.password());
 
         User user = new User();
         user.setFullName(request.fullName().trim());
@@ -147,14 +148,40 @@ public class AuthService {
         return buildAuthResponse(refreshToken.getUser());
     }
 
+    @Transactional
+    public void logout(String refreshToken) {
+        String hash = hashToken(refreshToken);
+        refreshTokenRepository.findByTokenHashAndRevokedFalse(hash)
+                .ifPresent(token -> {
+                    token.setRevoked(true);
+                    refreshTokenRepository.save(token);
+                });
+    }
+
+    @Transactional
+    public void revokeAllUserSessions(String email) {
+        User user = userRepository.findByEmail(normalizeEmail(email))
+                .orElseThrow(() -> new EntityNotFoundException("Utilizatorul nu a fost găsit."));
+        refreshTokenRepository.revokeAllByUser(user);
+    }
+
+    @Transactional
+    public void cleanupExpiredTokens() {
+        refreshTokenRepository.deleteExpiredOrRevoked(LocalDateTime.now());
+    }
+
     public void forgotPassword(ForgotPasswordRequest request) {
         normalizeEmail(request.email());
     }
 
+    @Transactional
     public void resetPassword(ResetPasswordRequest request) {
         if (!request.newPassword().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Parolele introduse nu coincid.");
         }
+        // In a real app, we'd verify the 'token' here. 
+        // For now, this is a placeholder as the reset token system is not fully implemented.
+        validatePasswordStrength(request.newPassword());
     }
 
     private AuthResponse buildAuthResponse(User user) {
@@ -221,6 +248,21 @@ public class AuthService {
             return Base64.getEncoder().encodeToString(hashed);
         } catch (NoSuchAlgorithmException ex) {
             throw new IllegalStateException("Nu s-a putut genera hash-ul pentru token.", ex);
+        }
+    }
+
+    private void validatePasswordStrength(String password) {
+        if (password.length() < 8) {
+            throw new IllegalArgumentException("Parola trebuie să aibă cel puțin 8 caractere.");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new IllegalArgumentException("Parola trebuie să conțină cel puțin o literă mare.");
+        }
+        if (!password.matches(".*[a-z].*")) {
+            throw new IllegalArgumentException("Parola trebuie să conțină cel puțin o literă mică.");
+        }
+        if (!password.matches(".*\\d.*")) {
+            throw new IllegalArgumentException("Parola trebuie să conțină cel puțin o cifră.");
         }
     }
 }

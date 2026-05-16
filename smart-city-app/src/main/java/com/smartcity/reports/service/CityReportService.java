@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +64,13 @@ public class CityReportService {
         newReport.setUser(user);
         newReport.setCategory(reportCategory);
 
+        notificationService.sendNotification(
+                newReport.getUser().getEmail(),
+                "Sesizare creată",
+                "Sesizarea a fost creată în data de " + Instant.now(),
+                NotificationType.REPORT_STATUS_CHANGE
+        );
+
         return cityReportMapper.toResponse(
                 cityReportRepository.save(newReport)
         );
@@ -86,9 +94,6 @@ public class CityReportService {
         ReportCategory reportCategory = reportCategoryRepository.findById(request.categoryId())
                         .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + request.categoryId() + " not found"));
 
-        ReportStatus oldStatus = cityReport.getStatus();
-        ReportStatus newStatus = request.status();
-
         cityReport.setCategory(reportCategory);
         cityReport.setDescription(request.description());
         cityReport.setLatitude(request.latitude());
@@ -107,15 +112,12 @@ public class CityReportService {
 
         CityReport updatedReport = cityReportRepository.save(cityReport);
 
-        if (oldStatus != newStatus) {
-            notificationService.sendNotification(
-                    cityReport.getUser().getEmail(),
-                    "Actualizare Status Sesizare",
-                    String.format("Statusul sesizării tale '%s' a fost actualizat din %s în %s.", 
-                            reportCategory.getName(), oldStatus, newStatus),
-                    NotificationType.REPORT_STATUS_CHANGE
-            );
-        }
+        notificationService.sendNotification(
+                cityReport.getUser().getEmail(),
+                "Sesizare actualizată",
+                "Sesizarea a fost actualizată in data de " + Instant.now(),
+                NotificationType.REPORT_STATUS_CHANGE
+        );
 
         return cityReportMapper.toResponse(updatedReport);
     }

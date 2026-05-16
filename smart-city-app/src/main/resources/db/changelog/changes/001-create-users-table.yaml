@@ -13,6 +13,11 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: google_id
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+              - column:
                   name: full_name
                   type: VARCHAR(255)
                   constraints:

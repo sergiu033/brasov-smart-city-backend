@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   postgres:
     image: postgres:16
@@ -11,25 +10,6 @@ services:
       - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  otp:
-    image: opentripplanner/opentripplanner:latest
-    container_name: brasov_otp
-    ports:
-      - "8080:8080"
-    volumes:
-      - ../algo-rutare-main/otp-config:/var/otp/graphs/brasov
-    command: [ "--build", "--serve", "/var/otp/graphs/brasov" ]
-
-  routing-api:
-    build: ../algo-rutare-main
-    container_name: brasov_routing_api
-    ports:
-      - "8081:8081"
-    environment:
-      - OTP_URL=http://otp:8080/otp/routers/default
-    depends_on:
-      - otp
 
 volumes:
   postgres_data:

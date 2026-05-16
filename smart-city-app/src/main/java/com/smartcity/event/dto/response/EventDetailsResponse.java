@@ -12,5 +12,6 @@ public record EventDetailsResponse(
         String location,
         LocalDateTime startTime,
         LocalDateTime endTime,
-        EventStatus status
+        EventStatus status,
+        String imageUrl
 ) {}

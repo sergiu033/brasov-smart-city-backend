@@ -67,6 +67,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error(ex.getMessage(), request));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorDetails> handleIllegalState(IllegalStateException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error(ex.getMessage(), request));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleUnexpected(Exception ex, HttpServletRequest request) {
         String message = "Eroare interna la procesarea request-ului pentru " + request.getRequestURI();

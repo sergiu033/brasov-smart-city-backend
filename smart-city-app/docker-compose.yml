@@ -1,9 +1,10 @@
+version: '3.8'
 services:
   postgres:
     image: postgres:16
     container_name: smart-city-postgres
     environment:
-      POSTGRES_DB: smart_city_app
+      POSTGRES_DB: smartcity
       POSTGRES_USER: smartcity
       POSTGRES_PASSWORD: smartcity
     ports:
@@ -11,20 +12,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  app:
-    build: .
-    container_name: smart-city-app
+  otp:
+    image: opentripplanner/opentripplanner:latest
+    container_name: brasov_otp
     ports:
-      - '8080:8080'
-    depends_on:
-      - postgres
-    environment:
-      - DB_URL=jdbc:postgresql://postgres:5432/smart_city_app
-      - DB_USERNAME=smartcity
-      - DB_PASSWORD=smartcity
-      - TRANSPORT_DATA_PATH=/app/data/linia_4.json
+      - "8080:8080"
     volumes:
-      - ../Testing Materials:/app/data
+      - ../algo-rutare-main/otp-config:/var/otp/graphs/brasov
+    command: [ "--build", "--serve", "/var/otp/graphs/brasov" ]
+
+  routing-api:
+    build: ../algo-rutare-main
+    container_name: brasov_routing_api
+    ports:
+      - "8081:8081"
+    environment:
+      - OTP_URL=http://otp:8080/otp/routers/default
+    depends_on:
+      - otp
 
 volumes:
   postgres_data:

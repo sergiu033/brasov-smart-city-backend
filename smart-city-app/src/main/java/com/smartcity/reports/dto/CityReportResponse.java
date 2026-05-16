@@ -8,7 +8,7 @@ public record CityReportResponse(
         Long id,
         Long userId,
         String userName,
-        ReportCategoryResponse category,
+        String categoryName,
         String description,
         Double latitude,
         Double longitude,

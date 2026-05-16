@@ -2,7 +2,7 @@ spring:
   application:
     name: smart-city-app
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5433/smart_city_app}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/smartcity}
     username: ${DB_USERNAME:smartcity}
     password: ${DB_PASSWORD:smartcity}
   jpa:
@@ -19,6 +19,11 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  storage:
+    root: ${APP_STORAGE_ROOT:./uploads}
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:}
   transport:
     data-path: ${TRANSPORT_DATA_PATH:../Testing Materials/linia_4.json} /// momentan
   security:

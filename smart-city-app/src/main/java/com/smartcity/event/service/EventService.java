@@ -8,6 +8,7 @@ import com.smartcity.event.dto.response.EventResponse;
 import com.smartcity.event.entity.Event;
 import com.smartcity.event.mapper.EventMapper;
 import com.smartcity.event.repository.EventRepository;
+import com.smartcity.imageservice.ImageStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final ImageStorageService imageStorageService;
 
     private Event getByIdOrThrow(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(
@@ -56,6 +60,7 @@ public class EventService {
                         .title(e.getTitle())
                         .when(weekOffset == 0 ? "Saptamana curenta" : "Saptamana viitoare")
                         .location(e.getLocation())
+                        .imageUrl(e.getImageUrl())
                         .build()
         );
     }
@@ -67,7 +72,22 @@ public class EventService {
 
     @Transactional
     public EventDetailsResponse addEvent(EventCreateRequest req) {
+
+        String filePath = null;
+
+        if (req.image() != null && !req.image().isEmpty()) {
+            try {
+                InputStream image = req.image().getInputStream();
+                filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         Event event = eventMapper.eventCreateRequestToEvent(req);
+        if (filePath != null) {
+            event.setImageUrl(filePath);
+        }
         Event savedEvent = eventRepository.save(event);
         return eventMapper.eventToEventDetailsResponse(savedEvent);
     }
@@ -83,6 +103,16 @@ public class EventService {
         event.setLocation(req.location());
         event.setStartTime(req.startTime());
         event.setEndTime(req.endTime());
+
+        if (req.image() != null && !req.image().isEmpty()) {
+            try {
+                InputStream image = req.image().getInputStream();
+                String filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+                event.setImageUrl(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         Event updatedEvent = eventRepository.save(event);
 

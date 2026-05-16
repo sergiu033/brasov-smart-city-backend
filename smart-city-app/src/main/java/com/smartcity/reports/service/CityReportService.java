@@ -16,10 +16,14 @@ import com.smartcity.reports.repository.ReportCategoryRepository;
 import com.smartcity.user.entity.User;
 import com.smartcity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import com.smartcity.imageservice.ImageStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,7 @@ public class CityReportService {
     private final ReportCategoryRepository reportCategoryRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final ImageStorageService imageStorageService;
 
     @Transactional
     public CityReportResponse createReport(CityReportRequest cityReportRequest, String userEmail) {
@@ -37,15 +42,33 @@ public class CityReportService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail));
 
+        ReportCategory reportCategory = reportCategoryRepository.findById(cityReportRequest.categoryId())
+                .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + cityReportRequest.categoryId() + " not found"));
+
+        String filePath = null;
+        if (cityReportRequest.image() != null && !cityReportRequest.image().isEmpty()) {
+            try {
+                InputStream image = cityReportRequest.image().getInputStream();
+                filePath = imageStorageService.saveImage(image, cityReportRequest.image().getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         CityReport newReport = cityReportMapper.toEntity(cityReportRequest);
+        if (filePath != null) {
+            newReport.setPhotoUrl(filePath);
+        }
 
         newReport.setUser(user);
+        newReport.setCategory(reportCategory);
 
         return cityReportMapper.toResponse(
                 cityReportRepository.save(newReport)
         );
     }
 
+    @Transactional(readOnly = true)
     public CityReportResponse getReportById(Long reportId) {
 
         CityReport cityReport = cityReportRepository.findById(reportId)
@@ -70,8 +93,17 @@ public class CityReportService {
         cityReport.setDescription(request.description());
         cityReport.setLatitude(request.latitude());
         cityReport.setLongitude(request.longitude());
-        cityReport.setStatus(newStatus);
-        cityReport.setPhotoUrl(request.photoUrl());
+        cityReport.setStatus(request.status());
+
+        if (request.image() != null && !request.image().isEmpty()) {
+            try {
+                InputStream image = request.image().getInputStream();
+                String filePath = imageStorageService.saveImage(image, request.image().getOriginalFilename());
+                cityReport.setPhotoUrl(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         CityReport updatedReport = cityReportRepository.save(cityReport);
 
@@ -92,6 +124,7 @@ public class CityReportService {
         cityReportRepository.deleteById(reportId);
     }
 
+    @Transactional(readOnly = true)
     public Page<CityReportResponse> getCurrentUserReports(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail));
@@ -99,6 +132,7 @@ public class CityReportService {
         return cityReportRepository.findByUserId(user.getId(), pageable).map(cityReportMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public Page<CityReportResponse> getAllReports(Pageable pageable) {
         return cityReportRepository.findAll(pageable).map(cityReportMapper::toResponse);
     }

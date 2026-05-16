@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,15 +35,15 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEventDetails(eventId));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<EventDetailsResponse> addEvent(@Valid @RequestBody EventCreateRequest req) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EventDetailsResponse> addEvent(@Valid @ModelAttribute EventCreateRequest req) {
         return ResponseEntity.ok(eventService.addEvent(req));
     }
 
-    @PutMapping("/{eventId}")
+    @PutMapping(value = "/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventDetailsResponse> updateEvent(
             @PathVariable Long eventId,
-            @Valid @RequestBody EventUpdateRequest req
+            @Valid @ModelAttribute EventUpdateRequest req
     ) {
         return ResponseEntity.ok(eventService.updateEvent(eventId, req));
     }

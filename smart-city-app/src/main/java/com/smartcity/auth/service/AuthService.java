@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -39,6 +40,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final GoogleTokenVerifier googleTokenVerifier;
     private final long refreshTokenExpirationDays;
 
     public AuthService(
@@ -47,12 +49,14 @@ public class AuthService {
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
             JwtService jwtService,
+            GoogleTokenVerifier googleTokenVerifier,
             @Value("${app.security.jwt.refresh-token-expiration-days}") long refreshTokenExpirationDays) {
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.googleTokenVerifier = googleTokenVerifier;
         this.refreshTokenExpirationDays = refreshTokenExpirationDays;
     }
 
@@ -98,6 +102,33 @@ public class AuthService {
             registerFailedAttempt(user);
             throw new BadCredentialsException("Email sau parola incorecta.");
         }
+    }
+
+    @Transactional
+    public AuthResponse loginWithGoogle(GoogleLoginRequest request) {
+        GoogleUserInfo googleUser = googleTokenVerifier.verify(request.idToken());
+        String email = normalizeEmail(googleUser.email());
+
+        User user = userRepository.findByGoogleId(googleUser.googleId())
+                .or(() -> userRepository.findByEmail(email))
+                .orElseGet(() -> createGoogleUser(googleUser, email));
+
+        if (user.getGoogleId() != null && !user.getGoogleId().equals(googleUser.googleId())) {
+            throw new IllegalArgumentException("Acest email este asociat altui cont Google.");
+        }
+
+        if (user.getGoogleId() == null) {
+            user.setGoogleId(googleUser.googleId());
+        }
+
+        if (!StringUtils.hasText(user.getPasswordHash())) {
+            user.setPasswordHash(passwordEncoder.encode(UUID.randomUUID().toString()));
+        }
+
+        resetFailedAttempts(user);
+        user.setLastLogin(LocalDateTime.now());
+        userRepository.save(user);
+        return buildAuthResponse(user);
     }
 
     @Transactional
@@ -194,6 +225,16 @@ public class AuthService {
     private void resetFailedAttempts(User user) {
         user.setFailedLoginAttempts(0);
         user.setLockedUntil(null);
+    }
+
+    private User createGoogleUser(GoogleUserInfo googleUser, String email) {
+        User user = new User();
+        user.setFullName(googleUser.fullName().trim());
+        user.setEmail(email);
+        user.setGoogleId(googleUser.googleId());
+        user.setPasswordHash(passwordEncoder.encode(UUID.randomUUID().toString()));
+        user.setRole(Role.CITIZEN);
+        return userRepository.save(user);
     }
 
     private String normalizeEmail(String email) {

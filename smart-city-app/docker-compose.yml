@@ -23,6 +23,7 @@ services:
       - DB_USERNAME=smartcity
       - DB_PASSWORD=smartcity
       - TRANSPORT_DATA_PATH=/app/data/linia_4.json
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
     volumes:
       - ../Testing Materials:/app/data
 

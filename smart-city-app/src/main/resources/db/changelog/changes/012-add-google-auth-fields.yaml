@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-add-google-auth-fields
+      author: smartcity
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: google_id
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: password_hash
+            columnDataType: VARCHAR(255)
+        - createIndex:
+            indexName: idx_users_google_id
+            tableName: users
+            columns:
+              - column:
+                  name: google_id

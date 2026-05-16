@@ -19,6 +19,9 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:}
   transport:
     data-path: ${TRANSPORT_DATA_PATH:../Testing Materials/linia_4.json} /// momentan
   security:

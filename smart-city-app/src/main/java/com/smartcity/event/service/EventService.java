@@ -60,6 +60,7 @@ public class EventService {
                         .title(e.getTitle())
                         .when(weekOffset == 0 ? "Saptamana curenta" : "Saptamana viitoare")
                         .location(e.getLocation())
+                        .imageUrl(e.getImageUrl())
                         .build()
         );
     }
@@ -72,18 +73,21 @@ public class EventService {
     @Transactional
     public EventDetailsResponse addEvent(EventCreateRequest req) {
 
-        String filePath = "";
+        String filePath = null;
 
-        try {
-            InputStream image = req.image().getInputStream();
-            filePath = imageStorageService.saveImage(image, req.image().getName());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        if (req.image() != null && !req.image().isEmpty()) {
+            try {
+                InputStream image = req.image().getInputStream();
+                filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         Event event = eventMapper.eventCreateRequestToEvent(req);
-        event.setImageUrl(filePath);
+        if (filePath != null) {
+            event.setImageUrl(filePath);
+        }
         Event savedEvent = eventRepository.save(event);
         return eventMapper.eventToEventDetailsResponse(savedEvent);
     }
@@ -99,6 +103,16 @@ public class EventService {
         event.setLocation(req.location());
         event.setStartTime(req.startTime());
         event.setEndTime(req.endTime());
+
+        if (req.image() != null && !req.image().isEmpty()) {
+            try {
+                InputStream image = req.image().getInputStream();
+                String filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+                event.setImageUrl(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         Event updatedEvent = eventRepository.save(event);
 

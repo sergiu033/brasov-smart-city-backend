@@ -16,5 +16,6 @@ public interface CityReportMapper {
     @Mapping(source = "category.name", target = "categoryName")
     CityReportResponse toResponse(CityReport cityReport);
 
+    @Mapping(target = "photoUrl", ignore = true)
     CityReport toEntity(CityReportRequest cityReportRequest);
 }

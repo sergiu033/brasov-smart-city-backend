@@ -7,6 +7,7 @@ public record EventResponse(
         Long id,
         String title,
         String when,
-        String location
+        String location,
+        String imageUrl
 ) {
 }

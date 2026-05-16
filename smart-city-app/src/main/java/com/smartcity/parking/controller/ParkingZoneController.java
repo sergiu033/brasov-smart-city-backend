@@ -1,13 +1,9 @@
 package com.smartcity.parking.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import com.smartcity.parking.dto.request.ParkingZoneCreateRequest;
 import com.smartcity.parking.dto.request.ParkingZoneUpdateRequest;
 import com.smartcity.parking.dto.response.ParkingZoneDetailsResponse;
 import com.smartcity.parking.dto.response.ParkingZoneResponse;
-import com.smartcity.parking.repository.ParkingZoneRepository;
 import com.smartcity.parking.service.ParkingZoneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ParkingZoneController {
 
-    private final ParkingZoneRepository parkingZoneRepository;
     private final ParkingZoneService parkingZoneService;
 
     @GetMapping("/zones")

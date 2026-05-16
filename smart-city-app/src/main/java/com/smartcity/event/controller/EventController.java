@@ -36,14 +36,14 @@ public class EventController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<EventDetailsResponse> addEvent(@Valid @RequestBody EventCreateRequest req) {
+    public ResponseEntity<EventDetailsResponse> addEvent(@Valid @ModelAttribute EventCreateRequest req) {
         return ResponseEntity.ok(eventService.addEvent(req));
     }
 
     @PutMapping(value = "/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventDetailsResponse> updateEvent(
             @PathVariable Long eventId,
-            @Valid @RequestBody EventUpdateRequest req
+            @Valid @ModelAttribute EventUpdateRequest req
     ) {
         return ResponseEntity.ok(eventService.updateEvent(eventId, req));
     }

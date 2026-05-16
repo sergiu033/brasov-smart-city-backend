@@ -12,9 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +29,9 @@ public class ReportsController {
         this.cityReportService = cityReportService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CityReportResponse> submit(
-            @RequestBody CityReportRequest request,
+            @ModelAttribute CityReportRequest request,
             @AuthenticationPrincipal UserDetails currentUser
     ) {
         String email = currentUser.getUsername();
@@ -60,10 +61,10 @@ public class ReportsController {
         return ResponseEntity.ok().body(cityReportService.getAllReports(pageable));
     }
 
-    @PutMapping("/{reportId}")
+    @PutMapping(value = "/{reportId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CityReportResponse> updateReport(
             @PathVariable Long reportId,
-            @RequestBody CityReportRequest request
+            @ModelAttribute CityReportRequest request
     ) {
         return ResponseEntity.ok().body(cityReportService.updateReport(reportId, request));
     }

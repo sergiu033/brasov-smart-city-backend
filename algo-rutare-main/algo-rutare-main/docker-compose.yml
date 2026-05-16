@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  otp:
+    image: eclipse-temurin:21-jre
+    container_name: routing_otp
+    working_dir: /otp-config
+    volumes:
+      - ./otp-config:/otp-config
+    command: java -Xmx4G -jar otp.jar --build --serve .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  bridge:
+    image: node:20-alpine
+    container_name: routing_bridge
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && node pwa-bridge.js"
+    ports:
+      - "8081:8081"
+    environment:
+      - OTP_URL=http://otp:8080/otp/routers/default/plan
+    depends_on:
+      - otp
+    restart: unless-stopped

@@ -3,10 +3,13 @@ package com.smartcity.reports.service;
 import com.smartcity.exception.CityReportNotFoundException;
 import com.smartcity.exception.ReportCategoryNotFoundException;
 import com.smartcity.exception.UserNotFoundException;
+import com.smartcity.notification.enums.NotificationType;
+import com.smartcity.notification.service.NotificationService;
 import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.entity.CityReport;
 import com.smartcity.reports.entity.ReportCategory;
+import com.smartcity.reports.enums.ReportStatus;
 import com.smartcity.reports.mapper.CityReportMapper;
 import com.smartcity.reports.repository.CityReportRepository;
 import com.smartcity.reports.repository.ReportCategoryRepository;
@@ -26,6 +29,7 @@ public class CityReportService {
     private final CityReportRepository cityReportRepository;
     private final ReportCategoryRepository reportCategoryRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public CityReportResponse createReport(CityReportRequest cityReportRequest, String userEmail) {
@@ -59,14 +63,29 @@ public class CityReportService {
         ReportCategory reportCategory = reportCategoryRepository.findById(request.categoryId())
                         .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + request.categoryId() + " not found"));
 
+        ReportStatus oldStatus = cityReport.getStatus();
+        ReportStatus newStatus = request.status();
+
         cityReport.setCategory(reportCategory);
         cityReport.setDescription(request.description());
         cityReport.setLatitude(request.latitude());
         cityReport.setLongitude(request.longitude());
-        cityReport.setStatus(request.status());
+        cityReport.setStatus(newStatus);
         cityReport.setPhotoUrl(request.photoUrl());
 
-        return cityReportMapper.toResponse(cityReportRepository.save(cityReport));
+        CityReport updatedReport = cityReportRepository.save(cityReport);
+
+        if (oldStatus != newStatus) {
+            notificationService.sendNotification(
+                    cityReport.getUser().getEmail(),
+                    "Actualizare Status Sesizare",
+                    String.format("Statusul sesizării tale '%s' a fost actualizat din %s în %s.", 
+                            reportCategory.getName(), oldStatus, newStatus),
+                    NotificationType.REPORT_STATUS_CHANGE
+            );
+        }
+
+        return cityReportMapper.toResponse(updatedReport);
     }
 
     public void deleteReport(Long reportId) {

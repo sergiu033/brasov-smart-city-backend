@@ -49,6 +49,9 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "profile_picture_url", columnDefinition = "VARCHAR(1024)")
+    private String profilePictureUrl;
+
     @PrePersist
     void onCreate() {
         LocalDateTime now = LocalDateTime.now();

@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
 import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 
@@ -56,10 +57,16 @@ public class GlobalExceptionHandler {
             RecommendationNotFoundException.class,
             RecommendationCategoryNotFoundException.class,
             ReportCategoryNotFoundException.class,
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            FileNotFoundException.class
     })
-    public ResponseEntity<ErrorDetails> handleNotFound(RuntimeException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDetails> handleNotFound(Exception ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(ex.getMessage(), request));
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ErrorDetails> handleSecurity(SecurityException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error(ex.getMessage(), request));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

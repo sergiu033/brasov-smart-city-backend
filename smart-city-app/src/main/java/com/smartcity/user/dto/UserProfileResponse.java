@@ -5,5 +5,6 @@ public record UserProfileResponse(
         String fullName,
         String email,
         String role,
-        String lastLogin) {
+        String lastLogin,
+        String profilePictureUrl) {
 }

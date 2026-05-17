@@ -9,14 +9,13 @@ import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.entity.CityReport;
 import com.smartcity.reports.entity.ReportCategory;
-import com.smartcity.reports.enums.ReportStatus;
 import com.smartcity.reports.mapper.CityReportMapper;
 import com.smartcity.reports.repository.CityReportRepository;
 import com.smartcity.reports.repository.ReportCategoryRepository;
 import com.smartcity.user.entity.User;
 import com.smartcity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import com.smartcity.imageservice.ImageStorageService;
+import com.smartcity.imagestorage.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +36,7 @@ public class CityReportService {
     private final ReportCategoryRepository reportCategoryRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
-    private final ImageStorageService imageStorageService;
+    private final ImageService imageService;
 
     private static final String NOT_FOUND = " not found";
 
@@ -54,7 +53,7 @@ public class CityReportService {
         if (cityReportRequest.image() != null && !cityReportRequest.image().isEmpty()) {
             try {
                 InputStream image = cityReportRequest.image().getInputStream();
-                filePath = imageStorageService.saveImage(image, cityReportRequest.image().getOriginalFilename());
+                filePath = imageService.saveImage(image, cityReportRequest.image().getOriginalFilename());
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
@@ -107,7 +106,7 @@ public class CityReportService {
         if (request.image() != null && !request.image().isEmpty()) {
             try {
                 InputStream image = request.image().getInputStream();
-                String filePath = imageStorageService.saveImage(image, request.image().getOriginalFilename());
+                String filePath = imageService.saveImage(image, request.image().getOriginalFilename());
                 cityReport.setPhotoUrl(filePath);
             } catch (IOException e) {
                 log.error(e.getMessage());

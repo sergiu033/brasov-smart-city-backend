@@ -1,4 +1,4 @@
-package com.smartcity.imageservice;
+package com.smartcity.imagestorage.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -6,7 +6,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,11 +17,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-public class ImageStorageService {
+public class ImageService {
 
     private final Path rootPath;
 
-    public ImageStorageService(@Value("${app.storage.root}") String storageRoot) {
+    public ImageService(@Value("${app.storage.root}") String storageRoot) {
         this.rootPath = Path.of(storageRoot).toAbsolutePath().normalize();
     }
 
@@ -31,16 +30,14 @@ public class ImageStorageService {
      *
      * @param inputStream      the image data stream
      * @param originalFileName the original name of the file to extract the extension
-     * @return the relative path to the saved image (save this in your database)
+     * @return the relative path using forward slashes (save this in your database)
      * @throws IOException if the file cannot be saved
      */
     public String saveImage(InputStream inputStream, String originalFileName) throws IOException {
         LocalDate today = LocalDate.now();
-        Path dateDirectory = rootPath.resolve(
-                today.getYear()
-                        + File.separator
-                        + String.format("%02d", today.getMonthValue())
-                        + String.format("%02d", today.getDayOfMonth()));
+        Path dateDirectory = rootPath
+                .resolve(String.valueOf(today.getYear()))
+                .resolve(String.format("%02d%02d", today.getMonthValue(), today.getDayOfMonth()));
 
         Files.createDirectories(dateDirectory);
 
@@ -52,8 +49,7 @@ public class ImageStorageService {
             StreamUtils.copy(inputStream, outputStream);
         }
 
-        // Return the relative path so it can be passed exactly as-is to getImageResource later
-        return rootPath.relativize(filePath).toString();
+        return toStoragePath(rootPath.relativize(filePath));
     }
 
     /**
@@ -64,8 +60,7 @@ public class ImageStorageService {
      * @throws IOException if the file cannot be found or read
      */
     public Resource getImageResource(String storedPath) throws IOException {
-
-        Path filePath = rootPath.resolve(storedPath).normalize();
+        Path filePath = rootPath.resolve(normalizeStoredPath(storedPath)).normalize();
         Path normalizedRootPath = rootPath.normalize().toAbsolutePath();
 
         // Critical security check: prevents directory traversal attacks
@@ -78,6 +73,14 @@ public class ImageStorageService {
         }
 
         return new UrlResource(filePath.toUri());
+    }
+
+    private static String toStoragePath(Path relativePath) {
+        return relativePath.toString().replace('\\', '/');
+    }
+
+    private static String normalizeStoredPath(String storedPath) {
+        return storedPath.replace('\\', '/');
     }
 
     /**

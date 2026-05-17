@@ -10,6 +10,28 @@ services:
       - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U smartcity -d smartcity']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  smart-city-app:
+    image: smart-city-app:latest
+    container_name: smart-city-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '8083:8083'
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/smartcity
+      DB_USERNAME: smartcity
+      DB_PASSWORD: smartcity
+      SERVER_PORT: 8083
+      APP_STORAGE_ROOT: /app/uploads
+    volumes:
+      - app_uploads:/app/uploads
 
   sonarqube-db:
     image: postgres:16
@@ -39,6 +61,7 @@ services:
 
 volumes:
   postgres_data:
+  app_uploads:
   sonarqube_db_data:
   sonarqube_data:
   sonarqube_extensions:

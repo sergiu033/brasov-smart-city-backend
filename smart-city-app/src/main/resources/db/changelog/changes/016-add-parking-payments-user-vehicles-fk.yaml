@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-add-parking-payments-user-vehicles-fk
+      author: ioana
+
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: vehicle_id
+            baseTableName: parking_payments
+            constraintName: fk_parking_payments_user_vehicles_id
+            referencedTableName: user_vehicles
+            referencedColumnNames: id

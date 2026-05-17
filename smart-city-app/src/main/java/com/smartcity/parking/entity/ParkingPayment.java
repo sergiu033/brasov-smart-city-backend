@@ -1,6 +1,7 @@
 package com.smartcity.parking.entity;
 
 import com.smartcity.user.entity.User;
+import com.smartcity.user_vehicles.entity.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,8 +30,9 @@ public class ParkingPayment {
     @JoinColumn(name = "zone_id", nullable = false)
     private ParkingZone zone;
 
-    @Column(name = "plate_number", nullable = false)
-    private String plateNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    private Vehicle vehicle;
 
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;

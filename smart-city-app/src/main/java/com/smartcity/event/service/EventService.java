@@ -8,7 +8,7 @@ import com.smartcity.event.dto.response.EventResponse;
 import com.smartcity.event.entity.Event;
 import com.smartcity.event.mapper.EventMapper;
 import com.smartcity.event.repository.EventRepository;
-import com.smartcity.imageservice.ImageStorageService;
+import com.smartcity.imagestorage.service.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final ImageStorageService imageStorageService;
+    private final ImageService imageService;
 
     private Event getByIdOrThrow(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(
@@ -86,7 +86,7 @@ public class EventService {
         if (req.image() != null && !req.image().isEmpty()) {
             try {
                 InputStream image = req.image().getInputStream();
-                filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+                filePath = imageService.saveImage(image, req.image().getOriginalFilename());
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
@@ -115,7 +115,7 @@ public class EventService {
         if (req.image() != null && !req.image().isEmpty()) {
             try {
                 InputStream image = req.image().getInputStream();
-                String filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
+                String filePath = imageService.saveImage(image, req.image().getOriginalFilename());
                 event.setImageUrl(filePath);
             } catch (IOException e) {
                 log.error(e.getMessage());

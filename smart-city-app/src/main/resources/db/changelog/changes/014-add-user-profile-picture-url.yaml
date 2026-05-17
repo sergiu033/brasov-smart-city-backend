@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-user-profile-picture-url
+      author: gabi
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: profile_picture_url
+                  type: VARCHAR(1024)

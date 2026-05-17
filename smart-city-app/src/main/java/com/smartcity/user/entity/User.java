@@ -1,11 +1,13 @@
 package com.smartcity.user.entity;
 
+import com.smartcity.user_vehicles.entity.Vehicle;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -51,6 +53,9 @@ public class User {
 
     @Column(name = "profile_picture_url", columnDefinition = "VARCHAR(1024)")
     private String profilePictureUrl;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Vehicle> vehicles;
 
     @PrePersist
     void onCreate() {

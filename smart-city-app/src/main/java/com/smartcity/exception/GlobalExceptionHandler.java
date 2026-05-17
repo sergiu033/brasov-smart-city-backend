@@ -58,7 +58,8 @@ public class GlobalExceptionHandler {
             RecommendationCategoryNotFoundException.class,
             ReportCategoryNotFoundException.class,
             UserNotFoundException.class,
-            FileNotFoundException.class
+            FileNotFoundException.class,
+            VehicleNotFoundException.class
     })
     public ResponseEntity<ErrorDetails> handleNotFound(Exception ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(ex.getMessage(), request));

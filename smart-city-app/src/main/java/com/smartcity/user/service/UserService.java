@@ -2,12 +2,15 @@ package com.smartcity.user.service;
 
 import com.smartcity.imagestorage.service.ImageService;
 import com.smartcity.user.dto.UserProfileResponse;
+import com.smartcity.user_vehicles.dto.VehicleRequest;
 import com.smartcity.user.entity.User;
+import com.smartcity.user_vehicles.entity.Vehicle;
 import com.smartcity.user.mapper.UserMapper;
 import com.smartcity.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,5 +80,21 @@ public class UserService {
             return "";
         }
         return fileName.substring(lastDot + 1).toLowerCase(Locale.ROOT);
+    }
+
+    public UserProfileResponse addVehicle(
+            VehicleRequest request,
+            Authentication authentication) {
+        String userEmail = authentication.getName();
+
+        User user = findUserByEmail(userEmail);
+
+        Vehicle vehicle = Vehicle.builder()
+                .user(user)
+                .plateNumber(request.plateNumber())
+                .build();
+
+        user.getVehicles().add(vehicle);
+        return userMapper.toDto(userRepository.save(user));
     }
 }

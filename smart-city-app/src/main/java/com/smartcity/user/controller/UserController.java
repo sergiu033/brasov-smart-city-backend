@@ -1,15 +1,13 @@
 package com.smartcity.user.controller;
 
 import com.smartcity.user.dto.UserProfileResponse;
+import com.smartcity.user_vehicles.dto.VehicleRequest;
 import com.smartcity.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -33,4 +31,13 @@ public class UserController {
             Authentication authentication) {
         return ResponseEntity.ok(userService.updateProfilePicture(authentication.getName(), image));
     }
+
+    @PutMapping("/vehicles")
+    public ResponseEntity<UserProfileResponse> addVehicle(
+            @Valid @RequestBody VehicleRequest request,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok().body(userService.addVehicle(request, authentication));
+    }
+
 }

@@ -66,7 +66,7 @@ public class ParkingPaymentService {
     public List<ParkingPaymentResponse> getUserPayments(String userEmail) {
         return parkingPaymentRepository.findByUserEmail(userEmail).stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private ParkingPaymentResponse mapToResponse(ParkingPayment payment) {

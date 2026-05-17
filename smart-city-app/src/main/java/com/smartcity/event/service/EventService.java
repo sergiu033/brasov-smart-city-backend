@@ -11,6 +11,7 @@ import com.smartcity.event.repository.EventRepository;
 import com.smartcity.imageservice.ImageStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
@@ -25,6 +26,7 @@ import java.time.temporal.TemporalAdjusters;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
@@ -49,10 +51,16 @@ public class EventService {
         return Pair.of(weekStart, nextWeekStart);
     }
 
-    public Page<EventResponse> findWithinWeek(int weekOffset, Pageable pageable) {
+    public Page<EventResponse> findWithinWeek(int weekOffset, String title, Pageable pageable) {
 
         Pair<LocalDateTime, LocalDateTime> weekBounds = getWeekBounds(weekOffset);
-        Page<Event> events = eventRepository.findEventsByWeek(weekBounds.getFirst(), weekBounds.getSecond(), pageable);
+        String titleQuery = title != null && !title.isBlank() ? title.trim() : null;
+        Page<Event> events = eventRepository.findEventsByWeek(
+                weekBounds.getFirst(),
+                weekBounds.getSecond(),
+                titleQuery,
+                pageable
+        );
 
         return events.map(
                 e -> EventResponse.builder()
@@ -80,7 +88,7 @@ public class EventService {
                 InputStream image = req.image().getInputStream();
                 filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
 
@@ -110,7 +118,7 @@ public class EventService {
                 String filePath = imageStorageService.saveImage(image, req.image().getOriginalFilename());
                 event.setImageUrl(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
 
@@ -121,7 +129,6 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long id) {
-        Event event = getByIdOrThrow(id);
         eventRepository.deleteById(id);
     }
 

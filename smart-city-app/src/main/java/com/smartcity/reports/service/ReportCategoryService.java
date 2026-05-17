@@ -35,7 +35,7 @@ public class ReportCategoryService {
     public List<ReportCategoryResponse> getAllCategories() {
         return reportCategoryRepository.findAll().stream()
                 .map(reportCategoryMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

@@ -22,10 +22,12 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
+    private static final String USER_NOT_FOUND = "User not found: ";
+
     @Transactional
     public void sendNotification(String userEmail, String title, String message, NotificationType type) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND + userEmail));
 
         Notification notification = new Notification();
         notification.setUser(user);
@@ -39,7 +41,7 @@ public class NotificationService {
 
     public Page<NotificationResponse> getUserNotifications(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND + userEmail));
 
         return notificationRepository.findByUserOrderByCreatedAtDesc(user, pageable)
                 .map(this::mapToResponse);
@@ -47,7 +49,7 @@ public class NotificationService {
 
     public long getUnreadCount(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND + userEmail));
         return notificationRepository.countByUserAndReadFalse(user);
     }
 
@@ -67,7 +69,7 @@ public class NotificationService {
     @Transactional
     public void markAllAsRead(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND + userEmail));
         notificationRepository.markAllAsRead(user);
     }
 

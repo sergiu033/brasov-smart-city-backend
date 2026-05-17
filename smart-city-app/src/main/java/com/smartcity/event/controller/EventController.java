@@ -21,13 +21,19 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping("/current-week")
-    public ResponseEntity<Page<EventResponse>> currentWeek(Pageable pageable) {
-        return ResponseEntity.ok(eventService.findWithinWeek(0, pageable));
+    public ResponseEntity<Page<EventResponse>> currentWeek(
+            @RequestParam(required = false) String title,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(eventService.findWithinWeek(0, title, pageable));
     }
 
     @GetMapping("/next-week")
-    public ResponseEntity<Page<EventResponse>> nextWeek(Pageable pageable) {
-        return ResponseEntity.ok(eventService.findWithinWeek(1, pageable));
+    public ResponseEntity<Page<EventResponse>> nextWeek(
+            @RequestParam(required = false) String title,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(eventService.findWithinWeek(1, title, pageable));
     }
 
     @GetMapping("/{eventId}")

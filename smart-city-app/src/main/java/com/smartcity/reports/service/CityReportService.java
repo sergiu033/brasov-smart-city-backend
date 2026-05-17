@@ -17,6 +17,7 @@ import com.smartcity.user.entity.User;
 import com.smartcity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.smartcity.imageservice.ImageStorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CityReportService {
 
     private final CityReportMapper cityReportMapper;
@@ -37,6 +39,8 @@ public class CityReportService {
     private final NotificationService notificationService;
     private final ImageStorageService imageStorageService;
 
+    private static final String NOT_FOUND = " not found";
+
     @Transactional
     public CityReportResponse createReport(CityReportRequest cityReportRequest, String userEmail) {
 
@@ -44,7 +48,7 @@ public class CityReportService {
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userEmail));
 
         ReportCategory reportCategory = reportCategoryRepository.findById(cityReportRequest.categoryId())
-                .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + cityReportRequest.categoryId() + " not found"));
+                .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + cityReportRequest.categoryId() + NOT_FOUND));
 
         String filePath = null;
         if (cityReportRequest.image() != null && !cityReportRequest.image().isEmpty()) {
@@ -52,7 +56,7 @@ public class CityReportService {
                 InputStream image = cityReportRequest.image().getInputStream();
                 filePath = imageStorageService.saveImage(image, cityReportRequest.image().getOriginalFilename());
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
 
@@ -80,7 +84,7 @@ public class CityReportService {
     public CityReportResponse getReportById(Long reportId) {
 
         CityReport cityReport = cityReportRepository.findById(reportId)
-                .orElseThrow(() -> new CityReportNotFoundException("Report with id: " + reportId + " not found"));
+                .orElseThrow(() -> new CityReportNotFoundException("Report with id: " + reportId + NOT_FOUND));
 
         return cityReportMapper.toResponse(cityReport);
     }
@@ -89,10 +93,10 @@ public class CityReportService {
     public CityReportResponse updateReport(Long reportId, CityReportRequest request) {
 
         CityReport cityReport = cityReportRepository.findById(reportId)
-                .orElseThrow(() -> new CityReportNotFoundException("Report with id: " + reportId + " not found"));
+                .orElseThrow(() -> new CityReportNotFoundException("Report with id: " + reportId + NOT_FOUND));
 
         ReportCategory reportCategory = reportCategoryRepository.findById(request.categoryId())
-                        .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + request.categoryId() + " not found"));
+                        .orElseThrow(() -> new ReportCategoryNotFoundException("Report category with id: " + request.categoryId() + NOT_FOUND));
 
         cityReport.setCategory(reportCategory);
         cityReport.setDescription(request.description());
@@ -106,7 +110,7 @@ public class CityReportService {
                 String filePath = imageStorageService.saveImage(image, request.image().getOriginalFilename());
                 cityReport.setPhotoUrl(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
 
@@ -135,7 +139,10 @@ public class CityReportService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CityReportResponse> getAllReports(Pageable pageable) {
-        return cityReportRepository.findAll(pageable).map(cityReportMapper::toResponse);
+    public Page<CityReportResponse> getAllReports(Long categoryId, Pageable pageable) {
+        Page<CityReport> reports = categoryId == null
+                ? cityReportRepository.findAllByOrderByCreatedAtDesc(pageable)
+                : cityReportRepository.findByCategoryIdOrderByCreatedAtDesc(categoryId, pageable);
+        return reports.map(cityReportMapper::toResponse);
     }
 }

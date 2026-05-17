@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
@@ -19,8 +18,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         FROM Event e
         WHERE e.startTime >= :weekStart
         AND e.endTime < :nextWeekStart
+        AND (:title IS NULL OR LOWER(e.title) LIKE LOWER(CONCAT('%', :title, '%')))
         ORDER BY e.startTime ASC
     """)
-    Page<Event> findEventsByWeek(@Param("weekStart") LocalDateTime weekStart, @Param("nextWeekStart") LocalDateTime nextWeekStart, Pageable pageable);
+    Page<Event> findEventsByWeek(
+            @Param("weekStart") LocalDateTime weekStart,
+            @Param("nextWeekStart") LocalDateTime nextWeekStart,
+            @Param("title") String title,
+            Pageable pageable
+    );
 
 }

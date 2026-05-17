@@ -3,7 +3,6 @@ package com.smartcity.event.entity;
 import com.smartcity.event.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 

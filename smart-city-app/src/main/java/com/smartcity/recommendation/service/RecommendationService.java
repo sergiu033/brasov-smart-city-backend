@@ -96,13 +96,13 @@ public class RecommendationService {
         recommendation.setTitle(req.title());
         recommendation.setDescription(req.description());
         recommendation.setLocation(req.location());
+        recommendation.setCategory(category);
 
         return recommendationMapper.recommendationToRecommendationDetailsResponse(recommendation);
     }
 
     @Transactional
     public void deleteRecommendation(Long id) {
-        Recommendation recommendation = getByIdOrThrow(id);
         recommendationRepository.deleteById(id);
     }
 

@@ -1,7 +1,6 @@
 package com.smartcity.parking.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smartcity.parking.enums.ParkingZoneStatus;
 import lombok.Builder;
 
 import java.math.BigDecimal;

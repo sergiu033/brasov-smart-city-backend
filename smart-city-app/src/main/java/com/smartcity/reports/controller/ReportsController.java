@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -57,8 +58,11 @@ public class ReportsController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CityReportResponse>> getReports(Pageable pageable) {
-        return ResponseEntity.ok().body(cityReportService.getAllReports(pageable));
+    public ResponseEntity<Page<CityReportResponse>> getReports(
+            @RequestParam(required = false) Long category,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok().body(cityReportService.getAllReports(category, pageable));
     }
 
     @PutMapping(value = "/{reportId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

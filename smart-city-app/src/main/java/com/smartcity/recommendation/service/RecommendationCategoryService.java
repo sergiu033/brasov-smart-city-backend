@@ -62,13 +62,11 @@ public class RecommendationCategoryService {
         recommendationCategory.setCode(req.code());
         recommendationCategory.setDisplayName(req.displayName());
 
-        RecommendationCategory savedRecommendationCategory = recommendationCategoryRepository.save(recommendationCategory);
-        return recommendationCategoryMapper.recommendationCategoryToRecommendationCategoryResponse(recommendationCategory);
+        return recommendationCategoryMapper.recommendationCategoryToRecommendationCategoryResponse(recommendationCategoryRepository.save(recommendationCategory));
     }
 
     @Transactional
     public void deleteRecommendationCategory(Long id) {
-        RecommendationCategory recommendationCategory = getByCodeOrByIdOrThrow(null, id, true);
         recommendationCategoryRepository.deleteById(id);
     }
 

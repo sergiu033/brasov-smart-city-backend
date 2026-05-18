@@ -23,7 +23,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      OTP_URL: http://otp:8080/otp/routers/default/plan
+      OTP_URL: http://otp:8080/otp/routers/default
       GTFS_DATA_PATH: /app/gtfs_transit_data.json
       TZ: Europe/Bucharest
     depends_on:

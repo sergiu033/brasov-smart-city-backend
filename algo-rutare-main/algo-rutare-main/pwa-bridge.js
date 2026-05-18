@@ -1,10 +1,27 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+const GTFS_DATA_PATH = process.env.GTFS_DATA_PATH || path.resolve(__dirname, 'gtfs_transit_data.json');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.get('/api/v1/transit/data', (req, res) => {
+    try {
+        if (!fs.existsSync(GTFS_DATA_PATH)) {
+            return res.status(404).json({
+                error: 'Transit data not found. Set GTFS_DATA_PATH or mount gtfs_transit_data.json.'
+            });
+        }
+        res.json(JSON.parse(fs.readFileSync(GTFS_DATA_PATH, 'utf8')));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 app.post('/api/v1/routing/plan', async (req, res) => {
     try {

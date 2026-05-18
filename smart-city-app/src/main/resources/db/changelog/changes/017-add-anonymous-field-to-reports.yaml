@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-add-anonymous-field-to-reports
+      author: gabi
+      changes:
+        - addColumn:
+            tableName: city_reports
+            columns:
+              - column:
+                  name: anonymous
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false

@@ -41,14 +41,33 @@ class CityReportMapperTest {
                 .latitude(45.65)
                 .longitude(25.61)
                 .status(ReportStatus.NEW)
+                .anonymous(false)
                 .build();
 
         CityReportResponse response = cityReportMapper.toResponse(report);
 
         assertThat(response.id()).isEqualTo(1L);
-        assertThat(response.userId()).isEqualTo(10L);
         assertThat(response.userName()).isEqualTo("Ion Popescu");
+        assertThat(response.anonymous()).isFalse();
         assertThat(response.categoryName()).isEqualTo("Iluminat");
         assertThat(response.description()).isEqualTo("Lampa defecta");
+    }
+
+    @Test
+    void toResponse_masksUserNameWhenAnonymous() {
+        User user = new User();
+        user.setId(10L);
+        user.setFullName("Ion Popescu");
+
+        CityReport report = CityReport.builder()
+                .id(1L)
+                .user(user)
+                .anonymous(true)
+                .build();
+
+        CityReportResponse response = cityReportMapper.toResponse(report);
+
+        assertThat(response.userName()).isEqualTo("anonim");
+        assertThat(response.anonymous()).isTrue();
     }
 }

@@ -33,8 +33,8 @@ class ReportsControllerTest {
 
     @Test
     void submit_returnsCreated() {
-        CityReportRequest request = new CityReportRequest(null, 1L, "desc", 1.0, 2.0, null, ReportStatus.NEW, null);
-        CityReportResponse response = new CityReportResponse(1L, 1L, "Ion", "Cat", "desc", 1.0, 2.0, null, ReportStatus.NEW, null);
+        CityReportRequest request = new CityReportRequest(null, 1L, "desc", 1.0, 2.0, null, ReportStatus.NEW, false, null);
+        CityReportResponse response = new CityReportResponse(1L, "Ion", "Cat", "desc", 1.0, 2.0, null, ReportStatus.NEW, false, null);
         User user = new User("ion@example.com", "pwd", List.of());
 
         when(cityReportService.createReport(request, "ion@example.com")).thenReturn(response);
@@ -47,7 +47,7 @@ class ReportsControllerTest {
 
     @Test
     void getReport_delegatesToService() {
-        CityReportResponse response = new CityReportResponse(1L, 1L, "Ion", "Cat", "d", null, null, null, ReportStatus.NEW, null);
+        CityReportResponse response = new CityReportResponse(1L, "Ion", "Cat", "d", null, null, null, ReportStatus.NEW, false, null);
         when(cityReportService.getReportById(1L)).thenReturn(response);
 
         assertThat(reportsController.getReport(1L).getBody()).isEqualTo(response);

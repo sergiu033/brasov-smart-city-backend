@@ -14,6 +14,7 @@ public record CityReportRequest(
         Double longitude,
         MultipartFile image,
         ReportStatus status,
+        Boolean anonymous,
         LocalDateTime createdAt
 ) {
 }

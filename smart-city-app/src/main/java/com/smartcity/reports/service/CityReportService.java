@@ -102,6 +102,9 @@ public class CityReportService {
         cityReport.setLatitude(request.latitude());
         cityReport.setLongitude(request.longitude());
         cityReport.setStatus(request.status());
+        if (request.anonymous() != null) {
+            cityReport.setAnonymous(request.anonymous());
+        }
 
         if (request.image() != null && !request.image().isEmpty()) {
             try {

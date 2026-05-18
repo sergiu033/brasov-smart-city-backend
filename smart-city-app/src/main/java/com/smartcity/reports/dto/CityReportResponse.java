@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 public record CityReportResponse(
         Long id,
-        Long userId,
         String userName,
         String categoryName,
         String description,
@@ -14,6 +13,7 @@ public record CityReportResponse(
         Double longitude,
         String photoUrl,
         ReportStatus status,
+        Boolean anonymous,
         LocalDateTime createdAt
 ) {
 }

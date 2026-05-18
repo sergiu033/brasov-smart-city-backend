@@ -50,7 +50,7 @@ class CityReportServiceTest {
 
     @Test
     void createReport_throwsWhenUserMissing() {
-        CityReportRequest request = new CityReportRequest(null, 1L, "desc", 1.0, 2.0, null, ReportStatus.NEW, null);
+        CityReportRequest request = new CityReportRequest(null, 1L, "desc", 1.0, 2.0, null, ReportStatus.NEW, false, null);
         when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> cityReportService.createReport(request, "missing@example.com"))
@@ -60,7 +60,7 @@ class CityReportServiceTest {
     @Test
     void createReport_throwsWhenCategoryMissing() {
         User user = sampleUser();
-        CityReportRequest request = new CityReportRequest(null, 99L, "desc", 1.0, 2.0, null, ReportStatus.NEW, null);
+        CityReportRequest request = new CityReportRequest(null, 99L, "desc", 1.0, 2.0, null, ReportStatus.NEW, false, null);
 
         when(userRepository.findByEmail("ion@example.com")).thenReturn(Optional.of(user));
         when(reportCategoryRepository.findById(99L)).thenReturn(Optional.empty());
@@ -75,11 +75,11 @@ class CityReportServiceTest {
         ReportCategory category = new ReportCategory();
         category.setId(1L);
         category.setName("Drumuri");
-        CityReportRequest request = new CityReportRequest(null, 1L, "Groapa", 45.6, 25.6, null, ReportStatus.NEW, null);
+        CityReportRequest request = new CityReportRequest(null, 1L, "Groapa", 45.6, 25.6, null, ReportStatus.NEW, false, null);
         CityReport entity = CityReport.builder().description("Groapa").build();
         CityReport saved = CityReport.builder().id(10L).user(user).category(category).build();
         CityReportResponse response = new CityReportResponse(
-                10L, 1L, "Ion Popescu", "Drumuri", "Groapa", 45.6, 25.6, null, ReportStatus.NEW, null);
+                10L, "Ion Popescu", "Drumuri", "Groapa", 45.6, 25.6, null, ReportStatus.NEW, false, null);
 
         when(userRepository.findByEmail("ion@example.com")).thenReturn(Optional.of(user));
         when(reportCategoryRepository.findById(1L)).thenReturn(Optional.of(category));

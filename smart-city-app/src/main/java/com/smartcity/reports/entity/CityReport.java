@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,10 @@ public class CityReport {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private ReportStatus status = ReportStatus.NEW;
+
+    @Column(name = "anonymous", nullable = false)
+    @Builder.Default
+    private Boolean anonymous = Boolean.TRUE;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

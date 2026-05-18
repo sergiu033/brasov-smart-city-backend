@@ -11,11 +11,19 @@ import org.mapstruct.NullValueCheckStrategy;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface CityReportMapper {
 
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "user.fullName", target = "userName")
+    @Mapping(target = "userName", expression = "java(mapUserName(cityReport))")
     @Mapping(source = "category.name", target = "categoryName")
     CityReportResponse toResponse(CityReport cityReport);
 
     @Mapping(target = "photoUrl", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "category", ignore = true)
     CityReport toEntity(CityReportRequest cityReportRequest);
+
+    default String mapUserName(CityReport cityReport) {
+        if (Boolean.TRUE.equals(cityReport.getAnonymous())) {
+            return "anonim";
+        }
+        return cityReport.getUser() != null ? cityReport.getUser().getFullName() : null;
+    }
 }

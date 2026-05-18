@@ -3,6 +3,7 @@ package com.smartcity.reports.controller;
 import com.smartcity.reports.dto.CityReportRequest;
 import com.smartcity.reports.dto.CityReportResponse;
 import com.smartcity.reports.service.CityReportService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class ReportsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CityReportResponse> submit(
-            @ModelAttribute CityReportRequest request,
+            @Valid @ModelAttribute CityReportRequest request,
             @AuthenticationPrincipal UserDetails currentUser
     ) {
         String email = currentUser.getUsername();
@@ -68,7 +69,7 @@ public class ReportsController {
     @PutMapping(value = "/{reportId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CityReportResponse> updateReport(
             @PathVariable Long reportId,
-            @ModelAttribute CityReportRequest request
+            @Valid @ModelAttribute CityReportRequest request
     ) {
         return ResponseEntity.ok().body(cityReportService.updateReport(reportId, request));
     }

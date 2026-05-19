@@ -15,16 +15,16 @@ services:
   bridge:
     image: node:20-alpine
     container_name: routing_bridge
-    working_dir: /app
+    working_dir: /bridge
     volumes:
-      - .:/app
-      - ../../../frontend/public/gtfs_transit_data.json:/app/gtfs_transit_data.json:ro
+      - ../../:/bridge
+      - ./gtfs_transit_data.json:/bridge/gtfs_transit_data.json:ro
     command: sh -c "npm install && node pwa-bridge.js"
     ports:
       - "8081:8081"
     environment:
       OTP_URL: http://otp:8080/otp/routers/default
-      GTFS_DATA_PATH: /app/gtfs_transit_data.json
+      GTFS_DATA_PATH: /bridge/gtfs_transit_data.json
       TZ: Europe/Bucharest
     depends_on:
       - otp

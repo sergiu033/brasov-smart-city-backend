@@ -1,7 +1,7 @@
 {
-  "name": "algo-rutare-bridge",
+  "name": "smart-city-pwa-bridge",
   "version": "1.0.0",
-  "description": "Node.js bridge for OTP",
+  "description": "Node.js PWA bridge for OTP routing and auxiliary APIs",
   "main": "pwa-bridge.js",
   "scripts": {
     "start": "node pwa-bridge.js"

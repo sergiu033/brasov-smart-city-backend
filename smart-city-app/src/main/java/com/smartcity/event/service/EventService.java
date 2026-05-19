@@ -70,7 +70,7 @@ public class EventService {
                 e -> EventResponse.builder()
                         .id(e.getId())
                         .title(e.getTitle())
-                        .when(weekOffset == 0 ? "Saptamana curenta" : "Saptamana viitoare")
+                        .when(e.getStartTime() != null ? e.getStartTime().toString() : weekBounds.getFirst().toString())
                         .location(e.getLocation())
                         .imageUrl(e.getImageUrl())
                         .build()

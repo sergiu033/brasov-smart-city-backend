@@ -18,13 +18,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         FROM Event e
         WHERE e.startTime >= :weekStart
         AND e.endTime < :nextWeekStart
-        AND (:title IS NULL OR LOWER(e.title) LIKE LOWER(CONCAT('%', :title, '%')))
+        AND (:titlePattern IS NULL OR LOWER(e.title) LIKE :titlePattern)
         ORDER BY e.startTime ASC
     """)
     Page<Event> findEventsByWeek(
             @Param("weekStart") LocalDateTime weekStart,
             @Param("nextWeekStart") LocalDateTime nextWeekStart,
-            @Param("title") String title,
+            @Param("titlePattern") String titlePattern,
             Pageable pageable
     );
 

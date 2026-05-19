@@ -1,4 +1,9 @@
 spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:smart-city-app/.env[.properties]
+      - optional:file:backend/smart-city-app/.env[.properties]
   application:
     name: smart-city-app
   datasource:
@@ -28,9 +33,10 @@ app:
     google:
       client-id: ${GOOGLE_CLIENT_ID:}
   transport:
-    data-path: ${TRANSPORT_DATA_PATH:../Testing Materials/linia_4.json} /// momentan
+    # Default path for local runs from smart-city-app module directory
+    data-path: ${TRANSPORT_DATA_PATH:../Testing Materials/linia_4.json}
   security:
     jwt:
-      secret: ${JWT_SECRET:ZkFrZUJhc2U2NEtleUZvclNtYXJ0Q2l0eUFwcEJhY2tlbmQxMjM0NTY3ODkwMTIzNDU2Nzg=}
-      access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+      secret: ${JWT_SECRET:local-dev-jwt-secret-change-me-before-production}
+      access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:9000000}
       refresh-token-expiration-days: ${JWT_REFRESH_EXPIRATION_DAYS:7}

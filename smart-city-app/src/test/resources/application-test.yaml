@@ -19,3 +19,8 @@ app:
   oauth:
     google:
       client-id: ""
+  security:
+    jwt:
+      secret: test-jwt-secret-for-unit-and-integration-tests-only
+      access-token-expiration-ms: 900000
+      refresh-token-expiration-days: 7

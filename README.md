@@ -17,12 +17,20 @@ chmod +x setup-engine.sh
 ### Run OTP + bridge (Docker)
 
 ```bash
-cd algo-rutare-main/algo-rutare-main
-docker compose up -d
+cd smart-city-app
+docker compose up -d otp bridge
 ```
 
 - OTP: http://localhost:8080  
 - Bridge: http://localhost:8081 (Node service: `backend/pwa-bridge.js`)
+
+### Run full backend (Postgres + API + routing)
+
+```bash
+cd smart-city-app
+./mvnw compile jib:dockerBuild   # build API image first
+docker compose up -d
+```
 
 ### Run bridge locally
 
@@ -72,10 +80,11 @@ cd smart-city-app
 .\mvnw.cmd compile jib:dockerBuild
 ```
 
-**2. Start Postgres and the API**
+**2. Start the full stack (or Postgres + API only)**
 
 ```bash
-docker compose up -d postgres smart-city-app
+docker compose up -d
+# or: docker compose up -d postgres smart-city-app
 ```
 
 **3. Rebuild after code changes**

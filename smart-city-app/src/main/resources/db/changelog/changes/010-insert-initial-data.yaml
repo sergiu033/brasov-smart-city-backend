@@ -101,25 +101,88 @@ databaseChangeLog:
             columns:
               - column:
                   name: zone_code
-                  value: A
-              - column:
-                  name: tariff_per_hour
-                  valueNumeric: 5.00
-              - column:
-                  name: tariff_per_day
-                  valueNumeric: 30.00
-        - insert:
-            tableName: parking_zones
-            columns:
-              - column:
-                  name: zone_code
-                  value: B
+                  value: "0"
               - column:
                   name: tariff_per_hour
                   valueNumeric: 3.00
               - column:
                   name: tariff_per_day
-                  valueNumeric: 20.00
+                  valueNumeric: 72.00
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: parking_zones
+            columns:
+              - column:
+                  name: zone_code
+                  value: "1"
+              - column:
+                  name: tariff_per_hour
+                  valueNumeric: 2.00
+              - column:
+                  name: tariff_per_day
+                  valueNumeric: 48.00
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: parking_zones
+            columns:
+              - column:
+                  name: zone_code
+                  value: "2"
+              - column:
+                  name: tariff_per_hour
+                  valueNumeric: 1.50
+              - column:
+                  name: tariff_per_day
+                  valueNumeric: 12.00
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Deșeuri, salubritate și curățenie urbană
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Infrastructură, utilități și accesibilitate
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Mobilitate, parcări și transport public
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Spații verzi, arbori și animale
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Vandalism, zgomot și siguranță publică
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Construcții și domeniu public
+        - insert:
+            tableName: report_categories
+            columns:
+              - column:
+                  name: name
+                  value: Probleme administrative
         - insert:
             tableName: municipal_services
             columns:

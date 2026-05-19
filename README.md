@@ -22,7 +22,15 @@ docker compose up -d
 ```
 
 - OTP: http://localhost:8080  
-- Bridge: http://localhost:8081  
+- Bridge: http://localhost:8081 (Node service: `backend/pwa-bridge.js`)
+
+### Run bridge locally
+
+```bash
+cd backend
+npm install
+node pwa-bridge.js
+```
 
 ## Smart City API (`smart-city-app`)
 

@@ -59,8 +59,10 @@ java -Xmx4G -jar otp.jar --build --serve .
 ```
 
 ### 3. Start the Bridge
-In a separate terminal, start the Node.js translator:
+In a separate terminal, start the Node.js translator from the repo `backend/` folder:
 ```bash
+cd ../../
+npm install
 node pwa-bridge.js
 ```
 

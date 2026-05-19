@@ -23,6 +23,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Locale;
 
 @RequiredArgsConstructor
 @Service
@@ -55,10 +56,13 @@ public class EventService {
 
         Pair<LocalDateTime, LocalDateTime> weekBounds = getWeekBounds(weekOffset);
         String titleQuery = title != null && !title.isBlank() ? title.trim() : null;
+        String titlePattern = titleQuery != null
+                ? "%" + titleQuery.toLowerCase(Locale.ROOT) + "%"
+                : null;
         Page<Event> events = eventRepository.findEventsByWeek(
                 weekBounds.getFirst(),
                 weekBounds.getSecond(),
-                titleQuery,
+                titlePattern,
                 pageable
         );
 
